@@ -51,7 +51,7 @@ mod token_factory {
         /**
         @notice
         Get user's tokens
-        @param _owner The address to set as the owner of the token. The token  will be owned by this address.
+        @param owner The address to set as the owner of the token. The token  will be owned by this address.
          */
         #[ink(message)]
         pub fn get_user_tokens(&self, owner: AccountId) -> Vec<AccountId> {
