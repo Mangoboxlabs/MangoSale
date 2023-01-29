@@ -65,6 +65,7 @@ mod mango_lock {
             amount:u128,
             end_time:u64
         ) -> bool {
+            if contract == AccountId::default() {return  false }
             let mut erc20: Erc20 = ink_env::call::FromAccountId::from_account_id(contract);
             let _ret = erc20.transfer_from(self.env().caller(),self.env().account_id(),amount);
             let lock = LockDetail{
@@ -82,11 +83,9 @@ mod mango_lock {
         }
         /**
         @notice
-        Add a new token lock
-
-        @param contract Token address
-        @param amount Number of locks
-        @end_time Lock end time
+        Additional locking token
+        @param index the id of lock
+        @amount Quantity to be locked
          */
         #[ink(message)]
         pub fn additional_tokens(
@@ -107,11 +106,67 @@ mod mango_lock {
         }
         /**
         @notice
+        Redefine locked time
+        @param index the id of lock
+        @end_time Lock end time
+         */
+        #[ink(message)]
+        pub fn additional_time(
+            &mut self,
+            index:u128,
+            end_time:u128
+        ) ->bool {
+            let mut exists_locks = self.user_locks.get(&self.env().caller()).unwrap_or(&Vec::new()).clone();
+            for i in  0..exists_locks.len(){
+                if i == index.try_into().unwrap() {
+                    exists_locks[i].end_time = end_time;
+                }
+            }
+            self.user_locks.insert(self.env().caller(),exists_locks);
+            true
+        }
+        /**
+        @notice
+        Extract locked token
+        @param index the id of lock
+         */
+        #[ink(message)]
+        pub fn withdraw_token(
+            &mut self,
+            index:u128,
+        ) ->bool {
+            let mut exists_locks = self.user_locks.get(&self.env().caller()).unwrap_or(&Vec::new()).clone();
+            for i in  0..exists_locks.len(){
+                if i == index.try_into().unwrap() {
+                    assert!(exists_locks[i].end_time <= self.env().block_timestamp());
+                    exists_locks[i].is_extract = true;
+                    exists_locks[i].amount = 0;
+                    let _ret = erc20.transfer(self.env().caller(),amount);
+                    return true
+                }
+            }
+            return  false
+        }
+
+        /**
+        @notice
         Get user's locks
          */
         #[ink(message)]
         pub fn get_user_locks(&self) -> Vec<LockDetail> {
             self.user_locks.get(&self.env().caller()).unwrap_or(&Vec::new()).clone()
+        }
+    }
+    #[cfg(test)]
+    mod tests {
+        /// Imports all the definitions from the outer scope so we can use them here.
+        use super::*;
+        /// Imports `ink_lang` so we can use `#[ink::test]`.
+        use ink_lang as ink;
+        #[ink::test]
+        fn lock_works() {
+            let mut mp = MangoLock::new();
+            assert!(mp.lock(AccountId::default(),1,1) == false);
         }
     }
 }
