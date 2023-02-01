@@ -110,6 +110,7 @@ mod mango_airdrop {
         pub fn distribution(&mut self, id:u128,information:Vec<DistributionInformation>) -> bool {
 
             let airdrop = self.id_airdrops.get(&id).unwrap().clone();
+            if airdrop.token == AccountId::default() { return  false}
             let mut erc20: Erc20 = ink_env::call::FromAccountId::from_account_id(airdrop.token);
             assert!(airdrop.owner == self.env().caller());
             let mut all_amount = 0;
@@ -121,7 +122,43 @@ mod mango_airdrop {
             let _ret = erc20.transfer_from(self.env().caller(),self.env().account_id(),all_amount);
             true
         }
-
+        /**
+        @notice
+        Collect token
+        @param id The id of airdrops
+        @param information Details of assignment
+         */
+        #[ink(message)]
+        pub fn collect(&mut self, id:u128) -> bool {
+            let airdrop = self.id_airdrops.get(&id).unwrap().clone();
+            assert!(airdrop.start_time <= self.env().block_timestamp());
+            if airdrop.token == AccountId::default() { return  false}
+            let mut erc20: Erc20 = ink_env::call::FromAccountId::from_account_id(airdrop.token);
+            let mut info =  self.get_user_collect(id);
+            assert!(info.amount > 0);
+            assert!(info.is_extract == false);
+            let _ret = erc20.transfer(self.env().caller(),info.amount);
+            info.amount = 0;
+            info.is_extract = true;
+            self.user_distribution.insert((id,self.env().caller()),info);
+            true
+        }
+        /**
+        @notice
+        Collect token
+        @param id The id of airdrops
+        @param information Details of assignment
+         */
+        #[ink(message)]
+        pub fn get_user_collect(&self,id:u128) -> DistributionInformation {
+            let default = DistributionInformation{
+                account:AccountId::default(),
+                amount:0,
+                is_extract:true
+            };
+            let info =  self.user_distribution.get(&(id,self.env().caller())).unwrap_or(&default).clone();
+            info
+        }
         /**
         @notice
         Get user's airdrops
@@ -139,6 +176,52 @@ mod mango_airdrop {
         #[ink(message)]
         pub fn get_all_airdrops(&self) -> Vec<AirdropDetail> {
             self.all_airdrops.clone()
+        }
+    }
+    #[cfg(test)]
+    mod tests {
+        /// Imports all the definitions from the outer scope so we can use them here.
+        use super::*;
+        /// Imports `ink_lang` so we can use `#[ink::test]`.
+        use ink_lang as ink;
+        #[ink::test]
+        fn new_airdrop_works() {
+            let mut mp = MangoAirdrop::new();
+            assert!(mp.new_airdrop(AccountId::default(),String::from("test"),String::from("test"),String::from("test"),0) == true);
+        }
+        #[ink::test]
+        fn distribution_works() {
+            let mut mp = MangoAirdrop::new();
+            let _ret = mp.new_airdrop(AccountId::default(),String::from("test"),String::from("test"),String::from("test"),0);
+            let default = DistributionInformation{
+                account:AccountId::default(),
+                amount:0,
+                is_extract:true
+            };
+            let mut vec = Vec::new();
+            vec.push(default);
+            assert!(mp.distribution(1,vec) == false);
+        }
+        #[ink::test]
+        fn collect_works() {
+            let mut mp = MangoAirdrop::new();
+            let _ret = mp.new_airdrop(AccountId::default(),String::from("test"),String::from("test"),String::from("test"),0);
+            assert!(mp.collect(1) == false);
+        }
+        #[ink::test]
+        fn get_user_collect_works() {
+            let  mp = MangoAirdrop::new();
+            assert!(mp.get_user_collect(1).amount == 0);
+        }
+        #[ink::test]
+        fn get_user_airdrops_works() {
+            let  mp = MangoAirdrop::new();
+            assert!(mp.get_user_airdrops(AccountId::default()).len() == 0);
+        }
+        #[ink::test]
+        fn get_all_airdrops_works() {
+            let  mp = MangoAirdrop::new();
+            assert!(mp.get_all_airdrops().len() == 0);
         }
     }
 }

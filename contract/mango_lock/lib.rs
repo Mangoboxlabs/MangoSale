@@ -114,7 +114,7 @@ mod mango_lock {
         pub fn additional_time(
             &mut self,
             index:u128,
-            end_time:u128
+            end_time:u64
         ) ->bool {
             let mut exists_locks = self.user_locks.get(&self.env().caller()).unwrap_or(&Vec::new()).clone();
             for i in  0..exists_locks.len(){
@@ -138,10 +138,12 @@ mod mango_lock {
             let mut exists_locks = self.user_locks.get(&self.env().caller()).unwrap_or(&Vec::new()).clone();
             for i in  0..exists_locks.len(){
                 if i == index.try_into().unwrap() {
+                    let mut erc20: Erc20 = ink_env::call::FromAccountId::from_account_id(exists_locks[i].contract);
                     assert!(exists_locks[i].end_time <= self.env().block_timestamp());
+                    let _ret = erc20.transfer(self.env().caller(),exists_locks[i].amount);
                     exists_locks[i].is_extract = true;
                     exists_locks[i].amount = 0;
-                    let _ret = erc20.transfer(self.env().caller(),amount);
+
                     return true
                 }
             }
@@ -167,6 +169,26 @@ mod mango_lock {
         fn lock_works() {
             let mut mp = MangoLock::new();
             assert!(mp.lock(AccountId::default(),1,1) == false);
+        }
+        #[ink::test]
+        fn additional_tokens_works() {
+            let mut mp = MangoLock::new();
+            assert!(mp.additional_tokens(0,1) == true);
+        }
+        #[ink::test]
+        fn additional_time_works() {
+            let mut mp = MangoLock::new();
+            assert!(mp.additional_time(0,1) == true);
+        }
+        #[ink::test]
+        fn withdraw_token_works() {
+            let mut mp = MangoLock::new();
+            assert!(mp.withdraw_token(0) == false);
+        }
+        #[ink::test]
+        fn get_user_locks_works() {
+            let  mp = MangoLock::new();
+            assert!(mp.get_user_locks().len() == 0);
         }
     }
 }

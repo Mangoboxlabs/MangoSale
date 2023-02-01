@@ -58,4 +58,16 @@ mod token_factory {
             self.user_tokens.get(&owner).unwrap_or(&Vec::new()).clone()
         }
     }
+    #[cfg(test)]
+    mod tests {
+        /// Imports all the definitions from the outer scope so we can use them here.
+        use super::*;
+        /// Imports `ink_lang` so we can use `#[ink::test]`.
+        use ink_lang as ink;
+        #[ink::test]
+        fn get_user_tokens_works() {
+            let mp = TokenFactory::new();
+            assert!(mp.get_user_tokens(AccountId::default()).len() == 0);
+        }
+    }
 }
