@@ -6,7 +6,7 @@ use ink_lang as ink;
 #[ink::contract]
 mod mango_lock {
     use erc20::Erc20;
-    use std::convert::TryInto;
+    use core::convert::TryInto;
     use alloc::string::String;
     use ink_prelude::vec::Vec;
     use ink_storage::{

@@ -6,7 +6,7 @@ use ink_lang as ink;
 #[allow(renamed_and_removed_lints)]
 #[ink::contract]
 mod mango_airdrop {
-    use std::convert::{TryFrom,TryInto};
+    use core::convert::TryFrom;
     use erc20::Erc20;
     use alloc::string::String;
     use ink_prelude::vec::Vec;
