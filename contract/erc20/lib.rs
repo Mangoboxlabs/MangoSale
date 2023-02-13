@@ -46,6 +46,11 @@ mod erc20 {
         num_check_points:StorageHashMap<AccountId,u32>,
         check_points:StorageHashMap<(AccountId, u32), Checkpoint>,
         delegates:StorageHashMap<AccountId,AccountId>,
+        burn_tax:u128,
+        marketing_tax:u128,
+        marketing_address:AccountId,
+        transfer_limit:u128,
+        wallet_limit:u128
     }
 
     #[derive(scale::Encode, scale::Decode, Clone)]
@@ -108,6 +113,8 @@ mod erc20 {
         InsufficientBalance,
         /// Returned if not enough allowance to fulfill a request is available.
         InsufficientAllowance,
+        TransferRestrictions,
+        WalletRestrictions,
     }
 
     /// The ERC-20 result type.
@@ -130,6 +137,11 @@ mod erc20 {
                 check_points:StorageHashMap::new(),
                 num_check_points:StorageHashMap::new(),
                 delegates:StorageHashMap::new(),
+                burn_tax:0,
+                marketing_tax:0,
+                marketing_address:AccountId::default(),
+                transfer_limit:0,
+                wallet_limit:0
             };
             Self::env().emit_event(Transfer {
                 from: None,
@@ -148,6 +160,28 @@ mod erc20 {
                 decimals: self.decimals,
                 owner: self.owner
             }
+        }
+
+        #[ink(message)]
+        pub fn set_configure(
+            &mut self,
+            burn_tax: u128,
+            marketing_tax:u128,
+            marketing_address:AccountId,
+            transfer_limit:u128,
+            wallet_limit:u128
+        ) -> bool {
+            self.burn_tax = burn_tax;
+            self.marketing_tax = marketing_tax;
+            self.marketing_address = marketing_address;
+            self.transfer_limit = transfer_limit;
+            self.wallet_limit = wallet_limit;
+            true
+        }
+
+        #[ink(message)]
+        pub fn get_configure(&self) -> (u128,u128,AccountId,u128,u128) {
+            return (self.burn_tax,self.marketing_tax,self.marketing_address, self.transfer_limit,self.wallet_limit);
         }
 
         /// Returns the account balance for the specified `owner`.
@@ -241,14 +275,37 @@ mod erc20 {
             &mut self,
             from: AccountId,
             to: AccountId,
-            value: Balance,
+            mut value: Balance,
         ) -> Result<()> {
             let from_balance = self.balance_of(from);
             if from_balance < value {
                 return Err(Error::InsufficientBalance)
             }
+            if self.transfer_limit > 0 {
+                if value > self.transfer_limit {
+                    return Err(Error::TransferRestrictions)
+                }
+            }
+            if self.burn_tax > 0 {
+                let burn_value = value * self.burn_tax / 10000; value-=burn_value;
+                *self.total_supply-=burn_value;
+                let none_balance = self.balance_of(AccountId::default());
+                self.balances.insert(AccountId::default(),none_balance + burn_value);
+            }
+            if self.marketing_tax >0 {
+                let marketing_value = value * self.marketing_tax / 10000;
+                value-=marketing_value;
+                let marketing_balance = self.balance_of(self.marketing_address);
+                self.balances.insert(self.marketing_address,marketing_balance + marketing_value);
+            }
+
             self.balances.insert(from, from_balance - value);
             let to_balance = self.balance_of(to);
+            if self.wallet_limit > 0 {
+                if (to_balance + value) > self.wallet_limit {
+                    return Err(Error::WalletRestrictions);
+                }
+            }
             self.balances.insert(to, to_balance + value);
 
             self.move_delegates(
