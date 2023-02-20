@@ -53,7 +53,9 @@ mod mango_airdrop {
         all_airdrops: Vec<AirdropDetail>,
         user_airdrops: StorageHashMap<AccountId, Vec<AirdropDetail>>,
         id_airdrops: StorageHashMap<u128, AirdropDetail>,
-        user_distribution:StorageHashMap<(u128,AccountId),DistributionInformation>
+        user_distribution:StorageHashMap<(u128,AccountId),DistributionInformation>,
+        id_distribution:StorageHashMap<u128, u128>,
+        id_collect:StorageHashMap<u128, u128>
     }
 
     impl MangoAirdrop {
@@ -64,6 +66,8 @@ mod mango_airdrop {
                 user_airdrops:StorageHashMap::new(),
                 id_airdrops:StorageHashMap::new(),
                 user_distribution:StorageHashMap::new(),
+                id_distribution:StorageHashMap::new(),
+                id_collect:StorageHashMap::new(),
             }
         }
         /**
@@ -119,8 +123,27 @@ mod mango_airdrop {
                 all_amount+=information[i].amount.clone();
                 self.user_distribution.insert((id,account),information[i].clone());
             }
+            self.id_distribution.insert(id,all_amount.clone());
             let _ret = erc20.transfer_from(self.env().caller(),self.env().account_id(),all_amount);
             true
+        }
+        /**
+        @notice
+        Get distribution details
+        @param id The id of airdrops
+         */
+        #[ink(message)]
+        pub fn get_id_distribution(&self, id:u128) -> u128 {
+            self.id_distribution.get(&id).unwrap_or(&0).clone()
+        }
+        /**
+        @notice
+        Get collect details
+        @param id The id of airdrops
+         */
+        #[ink(message)]
+        pub fn get_id_collect(&self, id:u128) -> u128 {
+            self.id_collect.get(&id).unwrap_or(&0).clone()
         }
         /**
         @notice
@@ -138,8 +161,11 @@ mod mango_airdrop {
             assert!(info.amount > 0);
             assert!(info.is_extract == false);
             let _ret = erc20.transfer(self.env().caller(),info.amount);
+            let mut user_collect = self.id_collect.get(&id).unwrap_or(&0).clone();
+            user_collect+=info.amount.clone();
             info.amount = 0;
             info.is_extract = true;
+            self.id_collect.insert(id,user_collect);
             self.user_distribution.insert((id,self.env().caller()),info);
             true
         }
@@ -147,7 +173,6 @@ mod mango_airdrop {
         @notice
         Collect token
         @param id The id of airdrops
-        @param information Details of assignment
          */
         #[ink(message)]
         pub fn get_user_collect(&self,id:u128) -> DistributionInformation {
