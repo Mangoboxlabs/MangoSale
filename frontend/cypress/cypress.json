@@ -1,0 +1,4 @@
+{
+  "fileServerFolder": "./dist",
+  "testFiles": "**/*.{ts,tsx}"
+}

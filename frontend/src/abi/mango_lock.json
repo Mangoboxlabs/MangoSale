@@ -1,0 +1,552 @@
+{
+  "source": {
+    "hash": "0xc2df2c7832e2231f077c85700e9833fd363396c6718833446d4ebc8622374e2e",
+    "language": "ink! 3.0.0-rc5",
+    "compiler": "rustc 1.68.0-nightly"
+  },
+  "contract": {
+    "name": "mango_lock",
+    "version": "0.1.0",
+    "authors": [
+      "[your_name] <[your_email]>"
+    ]
+  },
+  "V1": {
+    "spec": {
+      "constructors": [
+        {
+          "args": [],
+          "docs": [],
+          "name": [
+            "new"
+          ],
+          "selector": "0x9bae9d5e"
+        }
+      ],
+      "docs": [],
+      "events": [],
+      "messages": [
+        {
+          "args": [
+            {
+              "name": "contract",
+              "type": {
+                "displayName": [
+                  "AccountId"
+                ],
+                "type": 3
+              }
+            },
+            {
+              "name": "amount",
+              "type": {
+                "displayName": [
+                  "u128"
+                ],
+                "type": 11
+              }
+            },
+            {
+              "name": "end_time",
+              "type": {
+                "displayName": [
+                  "u64"
+                ],
+                "type": 10
+              }
+            }
+          ],
+          "docs": [
+            "\n        @notice\n        Add a new token lock\n\n        @param contract Token address\n        @param amount Number of locks\n        @end_time Lock end time\n         "
+          ],
+          "mutates": true,
+          "name": [
+            "lock"
+          ],
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "bool"
+            ],
+            "type": 12
+          },
+          "selector": "0xbbaa6540"
+        },
+        {
+          "args": [
+            {
+              "name": "index",
+              "type": {
+                "displayName": [
+                  "u128"
+                ],
+                "type": 11
+              }
+            },
+            {
+              "name": "amount",
+              "type": {
+                "displayName": [
+                  "u128"
+                ],
+                "type": 11
+              }
+            }
+          ],
+          "docs": [
+            "\n        @notice\n        Additional locking token\n        @param index the id of lock\n        @amount Quantity to be locked\n         "
+          ],
+          "mutates": true,
+          "name": [
+            "additional_tokens"
+          ],
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "bool"
+            ],
+            "type": 12
+          },
+          "selector": "0xa532ef40"
+        },
+        {
+          "args": [
+            {
+              "name": "index",
+              "type": {
+                "displayName": [
+                  "u128"
+                ],
+                "type": 11
+              }
+            },
+            {
+              "name": "end_time",
+              "type": {
+                "displayName": [
+                  "u64"
+                ],
+                "type": 10
+              }
+            }
+          ],
+          "docs": [
+            "\n        @notice\n        Redefine locked time\n        @param index the id of lock\n        @end_time Lock end time\n         "
+          ],
+          "mutates": true,
+          "name": [
+            "additional_time"
+          ],
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "bool"
+            ],
+            "type": 12
+          },
+          "selector": "0xd9fbe916"
+        },
+        {
+          "args": [
+            {
+              "name": "index",
+              "type": {
+                "displayName": [
+                  "u128"
+                ],
+                "type": 11
+              }
+            }
+          ],
+          "docs": [
+            "\n        @notice\n        Extract locked token\n        @param index the id of lock\n         "
+          ],
+          "mutates": true,
+          "name": [
+            "withdraw_token"
+          ],
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "bool"
+            ],
+            "type": 12
+          },
+          "selector": "0x3e7d451e"
+        },
+        {
+          "args": [],
+          "docs": [
+            "\n        @notice\n        Get user's locks\n         "
+          ],
+          "mutates": false,
+          "name": [
+            "get_user_locks"
+          ],
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "Vec"
+            ],
+            "type": 8
+          },
+          "selector": "0x5de23cfb"
+        }
+      ]
+    },
+    "storage": {
+      "struct": {
+        "fields": [
+          {
+            "layout": {
+              "struct": {
+                "fields": [
+                  {
+                    "layout": {
+                      "struct": {
+                        "fields": [
+                          {
+                            "layout": {
+                              "cell": {
+                                "key": "0x0000000000000000000000000000000000000000000000000000000000000000",
+                                "ty": 0
+                              }
+                            },
+                            "name": "header"
+                          },
+                          {
+                            "layout": {
+                              "struct": {
+                                "fields": [
+                                  {
+                                    "layout": {
+                                      "cell": {
+                                        "key": "0x0100000000000000000000000000000000000000000000000000000000000000",
+                                        "ty": 1
+                                      }
+                                    },
+                                    "name": "len"
+                                  },
+                                  {
+                                    "layout": {
+                                      "array": {
+                                        "cellsPerElem": 1,
+                                        "layout": {
+                                          "cell": {
+                                            "key": "0x0100000001000000000000000000000000000000000000000000000000000000",
+                                            "ty": 2
+                                          }
+                                        },
+                                        "len": 4294967295,
+                                        "offset": "0x0200000000000000000000000000000000000000000000000000000000000000"
+                                      }
+                                    },
+                                    "name": "elems"
+                                  }
+                                ]
+                              }
+                            },
+                            "name": "entries"
+                          }
+                        ]
+                      }
+                    },
+                    "name": "keys"
+                  },
+                  {
+                    "layout": {
+                      "hash": {
+                        "layout": {
+                          "cell": {
+                            "key": "0x0200000001000000000000000000000000000000000000000000000000000000",
+                            "ty": 7
+                          }
+                        },
+                        "offset": "0x0100000001000000000000000000000000000000000000000000000000000000",
+                        "strategy": {
+                          "hasher": "Blake2x256",
+                          "postfix": "",
+                          "prefix": "0x696e6b20686173686d6170"
+                        }
+                      }
+                    },
+                    "name": "values"
+                  }
+                ]
+              }
+            },
+            "name": "user_locks"
+          },
+          {
+            "layout": {
+              "cell": {
+                "key": "0x0200000001000000000000000000000000000000000000000000000000000000",
+                "ty": 8
+              }
+            },
+            "name": "all_locks"
+          }
+        ]
+      }
+    },
+    "types": [
+      {
+        "id": 0,
+        "type": {
+          "def": {
+            "composite": {
+              "fields": [
+                {
+                  "name": "last_vacant",
+                  "type": 1,
+                  "typeName": "Index"
+                },
+                {
+                  "name": "len",
+                  "type": 1,
+                  "typeName": "u32"
+                },
+                {
+                  "name": "len_entries",
+                  "type": 1,
+                  "typeName": "u32"
+                }
+              ]
+            }
+          },
+          "path": [
+            "ink_storage",
+            "collections",
+            "stash",
+            "Header"
+          ]
+        }
+      },
+      {
+        "id": 1,
+        "type": {
+          "def": {
+            "primitive": "u32"
+          }
+        }
+      },
+      {
+        "id": 2,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "fields": [
+                    {
+                      "type": 6,
+                      "typeName": "VacantEntry"
+                    }
+                  ],
+                  "index": 0,
+                  "name": "Vacant"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 3,
+                      "typeName": "T"
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Occupied"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 3
+            }
+          ],
+          "path": [
+            "ink_storage",
+            "collections",
+            "stash",
+            "Entry"
+          ]
+        }
+      },
+      {
+        "id": 3,
+        "type": {
+          "def": {
+            "composite": {
+              "fields": [
+                {
+                  "type": 4,
+                  "typeName": "[u8; 32]"
+                }
+              ]
+            }
+          },
+          "path": [
+            "ink_env",
+            "types",
+            "AccountId"
+          ]
+        }
+      },
+      {
+        "id": 4,
+        "type": {
+          "def": {
+            "array": {
+              "len": 32,
+              "type": 5
+            }
+          }
+        }
+      },
+      {
+        "id": 5,
+        "type": {
+          "def": {
+            "primitive": "u8"
+          }
+        }
+      },
+      {
+        "id": 6,
+        "type": {
+          "def": {
+            "composite": {
+              "fields": [
+                {
+                  "name": "next",
+                  "type": 1,
+                  "typeName": "Index"
+                },
+                {
+                  "name": "prev",
+                  "type": 1,
+                  "typeName": "Index"
+                }
+              ]
+            }
+          },
+          "path": [
+            "ink_storage",
+            "collections",
+            "stash",
+            "VacantEntry"
+          ]
+        }
+      },
+      {
+        "id": 7,
+        "type": {
+          "def": {
+            "composite": {
+              "fields": [
+                {
+                  "name": "value",
+                  "type": 8,
+                  "typeName": "V"
+                },
+                {
+                  "name": "key_index",
+                  "type": 1,
+                  "typeName": "KeyIndex"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "V",
+              "type": 8
+            }
+          ],
+          "path": [
+            "ink_storage",
+            "collections",
+            "hashmap",
+            "ValueEntry"
+          ]
+        }
+      },
+      {
+        "id": 8,
+        "type": {
+          "def": {
+            "sequence": {
+              "type": 9
+            }
+          }
+        }
+      },
+      {
+        "id": 9,
+        "type": {
+          "def": {
+            "composite": {
+              "fields": [
+                {
+                  "name": "owner",
+                  "type": 3,
+                  "typeName": "AccountId"
+                },
+                {
+                  "name": "end_time",
+                  "type": 10,
+                  "typeName": "u64"
+                },
+                {
+                  "name": "amount",
+                  "type": 11,
+                  "typeName": "u128"
+                },
+                {
+                  "name": "contract",
+                  "type": 3,
+                  "typeName": "AccountId"
+                },
+                {
+                  "name": "is_extract",
+                  "type": 12,
+                  "typeName": "bool"
+                }
+              ]
+            }
+          },
+          "path": [
+            "mango_lock",
+            "mango_lock",
+            "LockDetail"
+          ]
+        }
+      },
+      {
+        "id": 10,
+        "type": {
+          "def": {
+            "primitive": "u64"
+          }
+        }
+      },
+      {
+        "id": 11,
+        "type": {
+          "def": {
+            "primitive": "u128"
+          }
+        }
+      },
+      {
+        "id": 12,
+        "type": {
+          "def": {
+            "primitive": "bool"
+          }
+        }
+      }
+    ]
+  }
+}
