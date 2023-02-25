@@ -8,7 +8,7 @@
             Airdrop Launched
           </div>
           <div class="value">
-            {{ distribution }}
+            {{ list.length }}
           </div>
         </div>
 <!--        <div class="info-item">-->

@@ -32,7 +32,7 @@
     </div>
     <div class="panel-box">
       <div class="title">
-        Tax Free
+        Transfer Fee
       </div>
 
       <div class="inline-input-box">
@@ -48,7 +48,7 @@
         <input type="text" placeholder="Marketing Tax" v-model="tokenParams.marketing_tax">
       </div>
 
-      <h3 style="font-size: 20px">3. Marketing Wallet</h3>
+      <h3 style="font-size: 22px">Marketing Wallet</h3>
       <div class="inline-input-box">
         <div class="name">
           Address
@@ -62,7 +62,7 @@
       </div>
       <div class="inline-input-box">
         <div class="name">
-          Swap limit
+          Transfer limit
         </div>
         <el-switch
             v-model="isShow1"
@@ -78,7 +78,7 @@
       </div>
       <div class="inline-input-box">
         <div class="name">
-          Swap limit
+          Wallet limit
         </div>
         <el-switch
             v-model="isShow2"

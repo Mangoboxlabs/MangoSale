@@ -53,7 +53,7 @@
       </div>
       <div class="time-box">
         <div class="name">
-          Airdrop Start Time(UTC)）
+          Airdrop Start Time(UTC)
         </div>
         <el-date-picker
             class="pickerDate"
@@ -142,7 +142,7 @@ export default {
       pickerDate:"",
       airdropParams: {
         start_time: 0,
-        title: "test",
+        title: undefined,
         information: "",
         description: "",
       },
@@ -192,6 +192,13 @@ export default {
       if(!this.pickerDate){
         this.$eventBus.$emit('message', {
           message: "Please picker date ",
+          type: "error"
+        })
+        return
+      }
+      if(!this.airdropParams.title){
+        this.$eventBus.$emit('message', {
+          message: "Please airdrop title ",
           type: "error"
         })
         return
@@ -267,7 +274,17 @@ export default {
       line-height: 24px;
     }
   }
-
+  ::v-deep .pickerDate{
+    background: #0D1319;
+    border-radius: 10px;
+    border: 1px solid #515151;
+    margin-top: 2em;
+    input{
+      background: #0D1319;
+      border-radius: 10px;
+      color: #fff;
+    }
+  }
   .input {
     position: relative;
 
