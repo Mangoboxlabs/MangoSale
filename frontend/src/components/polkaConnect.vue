@@ -17,9 +17,13 @@
     <div class="connect-panel" v-show="isShowConnect" @click="isShowConnect=false;$emit('changeState')">
       <div class="mask"></div>
       <div class="content  animate__animated  animate__bounceInLeft" @click.stop>
-        <h2 class="title">
+        <h2 class="title" style="color: #333">
           Choose Wallet
         </h2>
+        <div style="font-size: 26px" class="no-wallet" v-show="noWallet">
+          {{noWallet}}
+          <a href="https://polkadot.js.org/extension/" target="_blank">download it?</a>
+        </div>
         <div class="item" :class="{'active': item.address==account}" @click="polkaConnect(item.address)" v-for="(item,index) in accountList" :key="index">
           <div class="address">{{item.address}}</div>
           <div class="name">({{item.meta.name}})</div>
@@ -42,7 +46,7 @@ export default {
       isLoading: false,
       isShowConnect: false,
       accountList:[],
-
+      noWallet:undefined
     }
   },
   computed: {
@@ -52,7 +56,10 @@ export default {
   },
   async created() {
 
-    // let accountList = await Accounts.accountList();
+    let accountList = await Accounts.accountList();
+    if(accountList&&!accountList.status&&accountList.type =="wallet"){
+      this.noWallet = accountList.msg
+    }
     // this.accountList = accountList.allAccounts
     // if(accountList.allAccounts&&accountList.allAccounts.length>0){
     //   this.$store.commit("app/SET_ACCOUNT", accountList.allAccounts[0].address)
@@ -129,7 +136,6 @@ export default {
     top: 0px;
     left: 50%;
     will-change: opacity;
-
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
@@ -205,7 +211,6 @@ export default {
     border: 1px solid #057fd0;
     display: inline-block;
     cursor: pointer;
-    color: #ffffff;
     font-family: Arial;
     font-size: 15px;
     font-weight: bold;
