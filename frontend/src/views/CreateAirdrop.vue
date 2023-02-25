@@ -51,6 +51,18 @@
         </div>
         <input type="text" v-model="airdropParams.title">
       </div>
+      <div class="time-box">
+        <div class="name">
+          Airdrop Start Time(UTC)）
+        </div>
+        <el-date-picker
+            class="pickerDate"
+            v-model="pickerDate"
+            type="datetime"
+            placeholder="Choose Date">
+        </el-date-picker>
+
+      </div>
       <div class="input-box">
         <div class="name">
           Logo Link
@@ -124,8 +136,10 @@ export default {
   name: "CreateAirdrop",
   data() {
     return {
-      token: "5HXnPJkxsdZKuXbiB36EpsYPNrxdgiRETsFmUZSasCkKU8pr",
+      //5HXnPJkxsdZKuXbiB36EpsYPNrxdgiRETsFmUZSasCkKU8pr
+      token: "",
       coinInfo:{},
+      pickerDate:"",
       airdropParams: {
         start_time: 0,
         title: "test",
@@ -175,7 +189,14 @@ export default {
 
     },
     async CreateAirdrop() {
-      this.airdropParams.start_time = new Date().getTime()
+      if(!this.pickerDate){
+        this.$eventBus.$emit('message', {
+          message: "Please picker date ",
+          type: "error"
+        })
+        return
+      }
+      this.airdropParams.start_time = new Date(this.pickerDate).getTime()
       const ipfsRes = await uploadJson(this.ipfsObj)
       this.airdropParams.information = ipfsRes.data.IpfsHash
       await this.$store.dispatch("mangoAirdrop/newAirdrop", {token:this.token, ...this.airdropParams})

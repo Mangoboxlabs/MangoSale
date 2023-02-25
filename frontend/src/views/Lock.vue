@@ -4,7 +4,7 @@
       <div class="token-list">
         <div class="list-header">
           <div class="col">
-            Token/LP Token
+            Token
           </div>
           <div class="col">
             Unlock Time
@@ -88,9 +88,7 @@ export default {
          coinInfo,
          ...res[i]
        })
-       console.log(coinInfo)
      }
-      console.log(tempArr)
       this.list = tempArr
     }
   },

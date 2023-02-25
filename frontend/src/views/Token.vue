@@ -71,7 +71,6 @@ export default {
   },
   methods: {
     goAdmin(item){
-      console.log(item)
       if(item.owner == this.$store.state.app.account){
         this.$router.push({name:"TokenAdmin",params:item})
       }
@@ -87,7 +86,6 @@ export default {
         }
       }
       this.list = tempList
-      console.log(tempList)
     }
   },
   created() {

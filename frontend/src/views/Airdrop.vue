@@ -260,7 +260,6 @@ export default {
             }
           }
         }
-        console.log(tempList2)
         this.list = tempList2
       }catch (e){
         console.log(e)
@@ -269,13 +268,12 @@ export default {
   },
   created() {
     this.$store.dispatch("app/getWeb3").catch(()=>{
-      this.$eventBus.$emit('message', {
-        message: "Please Connect",
-        type: "error"
-      })
-    }).then(()=>{
+
+    }).then((res)=>{
+      if(res){
+        this.getMyAridrops()
+      }
       this.getAirdrops()
-      this.getMyAridrops()
     })
   }
 }

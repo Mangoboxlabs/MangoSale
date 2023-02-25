@@ -3,6 +3,7 @@ import {
     web3Enable,
     web3FromAddress
 } from '@polkadot/extension-dapp';
+/* eslint-disable*/
 import {eventBus} from "../utils/eventBus"
 let showErr = false
 const accountList = async () => {
@@ -47,10 +48,10 @@ const accountAddress = async () =>{
         }else{
             if(!showErr){
                 showErr = true
-                eventBus.$emit('message', {
-                    type: "error",
-                    message: "Please connect"
-                })
+                // eventBus.$emit('message', {
+                //     type: "error",
+                //     message: "Please connect"
+                // })
                 setTimeout(()=>{
                     showErr = false
                 },1000)

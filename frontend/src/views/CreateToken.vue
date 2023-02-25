@@ -48,7 +48,7 @@
         <input type="text" placeholder="Marketing Tax" v-model="tokenParams.marketing_tax">
       </div>
 
-      <h3>3. Marketing Wallet</h3>
+      <h3 style="font-size: 20px">3. Marketing Wallet</h3>
       <div class="inline-input-box">
         <div class="name">
           Address
@@ -110,10 +110,10 @@ export default {
       tokenParams:{
         erc20_code_hash: abiMap.Erc20Hash.address,
         version:0,
-        initial_supply: 100000000,
-        name:"TT",
-        symbol:"T",
-        decimals:10,
+        initial_supply: undefined,
+        name:undefined,
+        symbol:undefined,
+        decimals:undefined,
         owner:"",
         burn_tax:0,
         marketing_tax:0,
@@ -125,8 +125,43 @@ export default {
   },
   methods: {
     async createToken() {
+      if(!this.tokenParams.name){
+        this.$eventBus.$emit('message', {
+          message: "Please token name ",
+          type: "error"
+        })
+        return
+      }
+      if(!this.tokenParams.symbol){
+        this.$eventBus.$emit('message', {
+          message: "Please token symbol ",
+          type: "error"
+        })
+        return
+      }
+      if(!this.tokenParams.decimals){
+        this.$eventBus.$emit('message', {
+          message: "Please token symbol ",
+          type: "error"
+        })
+        return
+      }
+      if(!this.tokenParams.initial_supply){
+        this.$eventBus.$emit('message', {
+          message: "Please token supply ",
+          type: "error"
+        })
+        return
+      }
       this.tokenParams.version = parseInt(Math.random() * 600)
       this.tokenParams.owner = this.$store.state.app.account
+      if(!this.$store.state.app.account){
+        this.$eventBus.$emit('message', {
+          message: "Please connect  ",
+          type: "error"
+        })
+        return
+      }
       //erc20_code_hash, version, initial_supply, name, symbol, decimals, owner
       await this.$store.dispatch("tokenFactory/newErc20", this.tokenParams)
       this.$router.push("/Token")

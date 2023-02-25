@@ -7,7 +7,7 @@
       </div>
       <div class="input-box">
         <div class="name">
-          Token or LP Token Address
+          Token Address
         </div>
         <input type="text" v-model="token">
       </div>
@@ -52,7 +52,7 @@
           Amounts
         </div>
         <div class="input">
-          <input type="text" placeholder="Amounts" v-model="lockParams.amount">
+          <input type="number" placeholder="Amounts" v-model="lockParams.amount" >
           <div class="mangobox-button">
             MAX
           </div>
@@ -60,13 +60,13 @@
       </div>
       <div class="time-box">
         <div class="name">
-          Date ( UTC Time )
+          End Date ( UTC Time )
         </div>
         <el-date-picker
             class="pickerDate"
             v-model="pickerDate"
             type="datetime"
-            placeholder="选择日期时间">
+            placeholder="Choose Date">
         </el-date-picker>
 
       </div>
@@ -87,13 +87,15 @@ export default {
   data(){
     return {
       pickerDate:"",
-      token:"5HXnPJkxsdZKuXbiB36EpsYPNrxdgiRETsFmUZSasCkKU8pr",
+      //5HXnPJkxsdZKuXbiB36EpsYPNrxdgiRETsFmUZSasCkKU8pr
+      token:undefined,
       endDate:{},
       coinInfo:{},
       lockParams:{
-        contract:"5HXnPJkxsdZKuXbiB36EpsYPNrxdgiRETsFmUZSasCkKU8pr",
-        amount:10,
-        end_time:2020
+        //5HXnPJkxsdZKuXbiB36EpsYPNrxdgiRETsFmUZSasCkKU8pr
+        contract:"",
+        amount:undefined,
+        end_time:undefined
       }
     }
   },
@@ -120,10 +122,24 @@ export default {
 
     },
     approve(){
+      if(!this.$store.state.app.account){
+        this.$eventBus.$emit('message', {
+          message: "Please connect  ",
+          type: "error"
+        })
+        return
+      }
+      if(!this.token){
+        this.$eventBus.$emit('message', {
+          message: "Please input token  ",
+          type: "error"
+        })
+        return
+      }
       this.$store.dispatch("erc20/approve", {
         spender: abiMap.mangoLock.address,
-        value:"10000000000000000000000",
-        address: "5GgWfjQGcCqiQrjQE7pzhw7x5q5eAhhGgnxqFnT8X7ZUEjQU" ,
+        value:"100000000000000000000000000",
+        address: this.token ,
       })
     },
     async createLock() {
@@ -131,6 +147,20 @@ export default {
       // now.setFullYear(this.endDate.year)
       // now.setMonth(this.endDate.month)
       // now.setDate(this.endDate.day)
+      if(!this.$store.state.app.account){
+        this.$eventBus.$emit('message', {
+          message: "Please connect  ",
+          type: "error"
+        })
+        return
+      }
+      if(!this.token){
+        this.$eventBus.$emit('message', {
+          message: "Please input token  ",
+          type: "error"
+        })
+        return
+      }
       if(!this.pickerDate){
         this.$eventBus.$emit('message', {
           message: "Please picker date ",

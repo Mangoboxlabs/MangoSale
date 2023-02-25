@@ -58,10 +58,10 @@ export default {
     let _this = this
     //Start the project to establish a connection to the wallet
     this.$store.dispatch("app/getWeb3").catch(() => {
-      this.$eventBus.$emit('message', {
-        message: "Please Connect",
-        type: "error"
-      })
+      // this.$eventBus.$emit('message', {
+      //   message: "Please Connect",
+      //   type: "error"
+      // })
     })
     //
     this.$eventBus.$on('message', (message) => {
