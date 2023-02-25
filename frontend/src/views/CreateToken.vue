@@ -1,6 +1,6 @@
 <template>
   <div class="CreateToken">
-    <h2>Create Token</h2>
+    <h1>Create Token</h1>
     <div class="panel-box">
       <div class="title">
         Token

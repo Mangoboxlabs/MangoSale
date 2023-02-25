@@ -2,7 +2,7 @@
   <div class="CreateProject daoContentBg">
 
     <div class="CreateProject-content">
-      <h2>Creat your projects</h2>
+      <h1>Creat your projects</h1>
       <div class="progress-box">
         <div class="progress-item" @click="activeStep=0">
           <div :class="activeStep>=0?'active':''" class="index">1</div>
