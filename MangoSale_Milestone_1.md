@@ -23,5 +23,5 @@
 | 1.     | Ink! Contract 1           |   [mango_airdrop](https://github.com/Mangoboxlabs/MangoSale/tree/main/contract/mango_airdrop)   | MangoAirdrop:MangoAirdrop can implement different types of token airdrops. |
 | 2.     | Ink! Contract 2           |      [mango_lock](https://github.com/Mangoboxlabs/MangoSale/tree/main/contract/mango_lock)      | 2.MangoLock:MangoLock can realize the lock-up and linear release of Token. |
 | 3.     | Ink! Contract 3           |   [token_factory](https://github.com/Mangoboxlabs/MangoSale/tree/main/contract/token_factory)   | 3.TokenFactory: TokenFactory can create ERC20 tokens with tax functions.   |
-| 4.     | Front-end UI	         |                                |                                                                     |
-| 5.     | Front-end integration (e2e) test	         |                                                                   |                                                                            |
+| 4.     | Front-end UI	         |          [Front-end UI](https://github.com/Mangoboxlabs/MangoSale/tree/main/frontend)           |                      Front-end UI                                               |
+| 5.     | Front-end integration (e2e) test	         |                                                                                                 |                                                                            |
