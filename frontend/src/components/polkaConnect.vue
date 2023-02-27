@@ -24,7 +24,7 @@
           {{noWallet}}
           <a href="https://polkadot.js.org/extension/" target="_blank">download it?</a>
         </div>
-        <div class="item" :class="{'active': item.address==account}" @click="polkaConnect(item.address)" v-for="(item,index) in accountList" :key="index">
+        <div class="item connect-item" :class="{'active': item.address==account}" @click="polkaConnect(item.address)" v-for="(item,index) in accountList" :key="index">
           <div class="address">{{item.address}}</div>
           <div class="name">({{item.meta.name}})</div>
         </div>
