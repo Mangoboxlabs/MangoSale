@@ -85,6 +85,7 @@ export default {
           tempList.push({...coin, address: res[i]})
         }
       }
+      tempList.reverse()
       this.list = tempList
     }
   },

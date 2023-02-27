@@ -21,13 +21,13 @@
         <div class="name">
           Decimals
         </div>
-        <input type="text" v-model="tokenParams.decimals" placeholder="Token Decimals">
+        <input type="number" v-model="tokenParams.decimals" placeholder="Token Decimals">
       </div>
       <div class="input-box">
         <div class="name">
           Supply
         </div>
-        <input type="text" placeholder="Token Supply" v-model="tokenParams.initial_supply">
+        <input type="number" placeholder="Token Supply" v-model="tokenParams.initial_supply">
       </div>
     </div>
     <div class="panel-box">
@@ -37,7 +37,7 @@
 
       <div class="inline-input-box">
         <div class="name">
-          Brun Tax
+          Burn Tax
         </div>
         <input type="text" placeholder=""  v-model="tokenParams.burn_tax">
       </div>
@@ -123,7 +123,24 @@ export default {
       }
     }
   },
+  computed: {
+    account() {
+      return this.$store.state.app.account
+    }
+  },
+  watch: {
+    account() {
+      this.getUserTokens()
+    }
+  },
+  created() {
+    this.getUserTokens()
+  },
   methods: {
+    async getUserTokens() {
+      let res = await this.$store.dispatch("tokenFactory/getUserTokens", this.$store.state.app.account)
+      this.list = res
+    },
     async createToken() {
       if(!this.tokenParams.name){
         this.$eventBus.$emit('message', {
@@ -153,7 +170,8 @@ export default {
         })
         return
       }
-      this.tokenParams.version = parseInt(Math.random() * 600)
+      // this.tokenParams.version = parseInt(Math.random() * 300)
+      this.tokenParams.version = this.list.length+1
       this.tokenParams.owner = this.$store.state.app.account
       if(!this.$store.state.app.account){
         this.$eventBus.$emit('message', {

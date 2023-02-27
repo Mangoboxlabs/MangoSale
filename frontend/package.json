@@ -62,10 +62,12 @@
     "@vue/cli-plugin-vuex": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
     "cypress": "^12.6.0",
+    "esbuild": "^0.17.10",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
     "sass": "^1.32.7",
     "sass-loader": "^12.0.0",
+    "uglify-js": "^3.17.4",
     "vue-template-compiler": "^2.6.14",
     "webpack": "^5.75.0"
   },

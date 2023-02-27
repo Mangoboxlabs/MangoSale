@@ -61,6 +61,18 @@ it should be `ws://127.0.0.1:9900` by default.
 2. Add localhost path(like `ws://127.0.0.1:9900` ) to local node
 3. Use an account(like Alice) to wire money into a `Polkadot JS Extension` wallet
 
+
+
+### cypress e2e Test
+
+```
+npx cypress open
+```
+
+
+
+
+
 ## Way 2: Use the online version front-end test deployed contract
 
 ### entrance:
