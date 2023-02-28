@@ -139,7 +139,7 @@ export default {
       //5HXnPJkxsdZKuXbiB36EpsYPNrxdgiRETsFmUZSasCkKU8pr
       token: "",
       coinInfo:{},
-      pickerDate:"",
+      pickerDate: new Date(),
       airdropParams: {
         start_time: 0,
         title: undefined,
@@ -169,7 +169,7 @@ export default {
       this.getCoinInfo(value)
     },
     account(){
-      this.getCoinInfo(this.token)
+      this.getCoinInfo(this.token.trim())
     }
   },
   methods: {
@@ -206,7 +206,7 @@ export default {
       this.airdropParams.start_time = new Date(this.pickerDate).getTime()
       const ipfsRes = await uploadJson(this.ipfsObj)
       this.airdropParams.information = ipfsRes.data.IpfsHash
-      await this.$store.dispatch("mangoAirdrop/newAirdrop", {token:this.token, ...this.airdropParams})
+      await this.$store.dispatch("mangoAirdrop/newAirdrop", {token:this.token.trim(), ...this.airdropParams})
       this.$router.push("/Airdrop")
     }
   }

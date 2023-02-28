@@ -86,7 +86,7 @@ export default {
   name: "createLock",
   data(){
     return {
-      pickerDate:"",
+      pickerDate:new Date(),
       //5HXnPJkxsdZKuXbiB36EpsYPNrxdgiRETsFmUZSasCkKU8pr
       token:undefined,
       endDate:{},
@@ -106,20 +106,19 @@ export default {
   },
   watch:{
     token(value){
-      this.getCoinInfo(value)
+      this.getCoinInfo(value.trim())
     },
     account(){
-      this.getCoinInfo(this.token)
+      this.getCoinInfo(this.token.trim())
     }
   },
   methods: {
     async getCoinInfo(address){
-      if(address.length==48){
+      if(address.length>40){
         let coin =  await this.$store.dispatch("erc20/queryInfo", address)
         let balance =  await this.$store.dispatch("erc20/balanceOf", {address,owner:this.$store.state.app.account})
         this.coinInfo = {...coin,balance}
       }
-
     },
     approve(){
       if(!this.$store.state.app.account){
@@ -139,7 +138,7 @@ export default {
       this.$store.dispatch("erc20/approve", {
         spender: abiMap.mangoLock.address,
         value:"100000000000000000000000000",
-        address: this.token ,
+        address: this.token.trim() ,
       })
     },
     async createLock() {
@@ -168,7 +167,7 @@ export default {
         })
         return
       }
-      this.lockParams.contract = this.token
+      this.lockParams.contract = this.token.trim()
       this.lockParams.version = 7
       this.lockParams.end_time = new Date(this.pickerDate).getTime()
       this.lockParams.owner = this.$store.state.app.account

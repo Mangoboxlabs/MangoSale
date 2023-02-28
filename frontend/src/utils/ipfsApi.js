@@ -24,20 +24,20 @@ axios.interceptors.response.use(
         if (responseCode && responseCode != "200") {
             Message.closeAll();
             let message = response.data.message;
-            eventBus.$emit('message', {
-                message: "The request timed out. Please try again later",
-                type: "error"
-            })
+            // eventBus.$emit('message', {
+            //     message: "The request timed out. Please try again later",
+            //     type: "error"
+            // })
             return response;
         }
         return response;
     },
     error => {
         if(error.code === 'ECONNABORTED' || error.message ===   "Network Error" ||  error.message.includes("timeout")){
-            eventBus.$emit('message', {
-                message: "The request timed out. Please try again later",
-                type: "error"
-            })
+            // eventBus.$emit('message', {
+            //     message: "The request timed out. Please try again later",
+            //     type: "error"
+            // })
         }
         return Promise.resolve(error.response);
     }
@@ -94,7 +94,9 @@ function Utf8ArrayToStr(array) {
 export async function getIpfs(strHash) {
     if (strHash && strHash.length > 20 && typeof strHash == "string") {
         try {
-            let result = await axios.get(`https://cloudflare-ipfs.com/ipfs/${strHash}#x-ipfs-companion-no-redirect`, {})
+            // let result = await axios.get(`https://cloudflare-ipfs.com/ipfs/${strHash}#x-ipfs-companion-no-redirect`, {})
+            let result = await axios.get(`https://gateway.pinata.cloud/ipfs/${strHash}`, {})
+
             return result
         }catch (e){
             console.log(e)

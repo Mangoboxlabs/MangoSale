@@ -42,7 +42,6 @@ const actions = {
     },
     // eslint-disable-next-line no-empty-pattern
      async getBalance({},account){
-         console.log(state)
         let { data: balance } = await  state.web3.query.system.account(account);
          return balance.toHuman().free
 

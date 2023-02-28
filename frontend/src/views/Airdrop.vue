@@ -36,7 +36,6 @@
         <div class="airdrop-item"  v-for="(item,index) in list"
              :key="index">
 
-
           <div class="title">
             {{ item.title }}
           </div>
@@ -81,7 +80,6 @@
         <!--v-show ="item&&item.title&&item.title.length>0 " -->
         <div class="airdrop-item" @click="$router.push({path:'/Details',query:item})" v-for="(item,index) in ownerList"
              :key="index">
-
 
           <div class="title">
             {{ item.title }}
@@ -190,7 +188,6 @@ export default {
       maxCount: 12,
       activeIndex: 1,
       myList: [],
-      list: [],
       ownerList:[],
       distribution:0
     }
@@ -198,6 +195,9 @@ export default {
   computed: {
     account() {
       return this.$store.state.app.account
+    },
+    list(){
+      return this.$store.state.mangoAirdrop.airdropList
     }
   },
   watch: {
@@ -223,6 +223,7 @@ export default {
           }
         }
         this.myList = tempList2
+
       }catch (e) {
         console.log(e)
       }
@@ -244,7 +245,8 @@ export default {
             tempList.push({...res[i], tokenInfo: coin, userCollect,distribution})
           }
         }
-        this.list = tempList
+        tempList.reverse()
+        this.$store.commit('mangoAirdrop/SET_List',tempList)
         let tempList2 = []
         if (res && res.length > 0) {
           this.distribution=0
@@ -260,7 +262,8 @@ export default {
             }
           }
         }
-        this.list = tempList2
+        tempList2.reverse()
+        this.$store.commit('mangoAirdrop/SET_List',tempList2)
       }catch (e){
         console.log(e)
       }

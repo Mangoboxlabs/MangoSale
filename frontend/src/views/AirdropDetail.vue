@@ -47,39 +47,53 @@
         </div>
       </div>
     </div>
-    <div class="panel-box part2">
-      <div class="live">
+    <div class="flex-box claim-panel" style="display: flex;justify-content: space-between">
+      <div class="panel-box part2" style="width: 48%">
+        <div class="live">
 
-      </div>
-      <div class="start-time">
+        </div>
+        <div class="start-time">
         <span>
           Start Time(UTC)
         </span>
-        <span>
+          <span>
           {{
-            moment(new Date(queryParams.startTime.replace(new RegExp(',', 'g'), ''))).format('MMMM Do YYYY, h:mm:ss a')
-          }}
+              moment(new Date(queryParams.startTime.replace(new RegExp(',', 'g'), ''))).format('MMMM Do YYYY, h:mm:ss a')
+            }}
         </span>
-      </div>
-      <div class="start-time">
+        </div>
+        <div class="start-time">
         <span>
           Your Allocation
         </span>
-        <span>
-          {{ queryParams.userCollect.isExtract.toString()=="false" ? queryParams.userCollect.amount : 0 }}
+          <span>
+          {{ queryParams.userCollect.isExtract.toString() == "false" ? queryParams.userCollect.amount : 0 }}
         </span>
-      </div>
+        </div>
 
-      <div class="mangobox-button" @click="collect">
-        Claim
+        <div class="mangobox-button" @click="collect" v-show="queryParams.userCollect.amount>0">
+          Claim
+        </div>
+
       </div>
-      <div class="mangobox-button" @click="approve">
-        approve
-      </div>
-      <div class="mangobox-button" @click="distribution">
-        distribution
+      <div class="panel-box admin-panel" style="width: 48%"  v-show="queryParams.owner.toLowerCase() == account.toLowerCase()">
+        <div class="input-box">
+          <div class="name">
+            Distribution Number
+          </div>
+          <input type="number" v-model="dAmount">
+        </div>
+        <div class="mangobox-button" @click="approve">
+          approve
+        </div>
+        <div class="mangobox-button" @click="distribution"
+            >
+          distribution
+        </div>
+
       </div>
     </div>
+
   </div>
 </template>
 
@@ -92,6 +106,7 @@ export default {
   data() {
     return {
       moment,
+      dAmount: undefined,
       coinInfo: {
         decimals: 0,
         balance: 0,
@@ -121,7 +136,7 @@ export default {
       })
     },
     async collect() {
-      if(this.queryParams.userCollect.amount<=0){
+      if (this.queryParams.userCollect.amount <= 0) {
         this.$eventBus.$emit('message', {
           message: "do not have Allocation ",
           type: "error"
@@ -129,36 +144,42 @@ export default {
         return
       }
       await this.$store.dispatch("mangoAirdrop/collect", this.queryParams.id)
-      setTimeout(()=>{
+      setTimeout(() => {
         this.userCollect()
-      },1000)
+      }, 1000)
     },
     async distribution() {
       try {
+        if (!this.dAmount) {
+          this.dAmount = 100
+        }
         await this.$store.dispatch("mangoAirdrop/distribution", {
           id: this.queryParams.id,
           information: [{
             account: this.account,
-            amount: 100,
+            amount: this.dAmount,
             isExtract: false
           }]
         })
-        setTimeout(()=>{
+        setTimeout(() => {
           this.userCollect()
-        },1000)
-      }catch (e) {
+        }, 1000)
+      } catch (e) {
         console.log(e)
       }
     },
-    async userCollect(){
+    async userCollect() {
       let userCollect = await this.$store.dispatch("mangoAirdrop/getUserCollect", this.queryParams.id)
-      this.queryParams.userCollect =userCollect
+      userCollect.amount = userCollect.amount.replace(new RegExp(',','g'),'')
+      this.queryParams.userCollect = userCollect
+
     },
     async getData() {
       let queryParams = this.$route.query
       console.log(queryParams)
 
       this.queryParams = queryParams
+      queryParams.userCollect.amount = queryParams.userCollect.amount.replace(new RegExp(',','g'),'')
       if (queryParams && queryParams.tokenInfo) {
         this.coinInfo = queryParams.tokenInfo
         let balance = await this.$store.dispatch("erc20/balanceOf", {
@@ -180,17 +201,31 @@ export default {
   width: 1200px;
   margin: 20px auto;
 
-  .part2 {
+  .input-box {
+    width: 90%;
+
+    input {
+      width: 100% !important;
+    }
+  }
+
+  .panel-box {
     .mangobox-button {
       height: 50px;
       margin-top: 2em;
     }
-    .start-time{
+
+    .start-time {
       display: flex;
       justify-content: space-between;
       font-size: 20px;
       padding: 10px 0;
     }
+  }
+
+  .mangobox-button {
+    width: 80%;
+    margin: 0 auto;
   }
 
   .info-list {

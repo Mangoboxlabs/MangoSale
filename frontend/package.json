@@ -36,6 +36,7 @@
     "ant-design-vue": "^1.7.8",
     "axios": "^1.1.2",
     "bn.js": "^5.2.1",
+    "clipboard": "^2.0.11",
     "core-js": "^3.8.3",
     "dotenv": "^16.0.3",
     "element-ui": "^2.15.10",

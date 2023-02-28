@@ -17,9 +17,14 @@ async function judgeContract(web3) {
 }
 
 const state = {
+    airdropList:[],
     contract: null
 }
-const mutations = {};
+const mutations = {
+    SET_List(state,data){
+        state.airdropList = data
+    },
+};
 const actions = {
     async newAirdrop({rootState},{ token, title, information, description, start_time}) {
         await judgeContract(rootState.app.web3)
