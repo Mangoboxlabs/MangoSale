@@ -177,7 +177,7 @@ export default {
       this.$store.dispatch("erc20/approve", {
         spender: abiMap.mangoAirdrop.address,
         value: "10000000000000000000000",
-        address: "5GgWfjQGcCqiQrjQE7pzhw7x5q5eAhhGgnxqFnT8X7ZUEjQU",
+        address: this.token.trim(),
       })
     },
     async getCoinInfo(address){

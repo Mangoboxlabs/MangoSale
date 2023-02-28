@@ -35,10 +35,10 @@ describe('example to-do app', () => {
         cy.get('.sub-connect').click().then(() => {
             cy.wait(2000)
             cy.get('.connect-item:first').click()
+            cy.get('.home .nav-item').eq(1).click().then
         }).get('.airdrop-item:first .mangobox-button').click().then(() => {
             cy.wait(1000)
-
-            cy.get('.admin-panel .input-box').eq(0).find('input').type('1000')
+            cy.get('.admin-panel .input-box').eq(1).find('input').type('1000')
         }).then(() => {
             cy.wait(1000)
             cy.get('.admin-panel .mangobox-button').eq(0).click()

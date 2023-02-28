@@ -60,14 +60,7 @@
                 {{ item.distribution }}
               </div>
             </div>
-<!--            <div class="row">-->
-<!--              <div class="name">-->
-<!--                Participants-->
-<!--              </div>-->
-<!--              <div class="value">-->
-<!--                {{ item.userCollect.amount }}-->
-<!--              </div>-->
-<!--            </div>-->
+
             <div class="mangobox-button" @click="$router.push({path:'/AirdropDetail',query:item})">
               View Airdrop
             </div>
@@ -78,7 +71,7 @@
       </div>
       <div class="airdrop-list" v-if="activeIndex==2">
         <!--v-show ="item&&item.title&&item.title.length>0 " -->
-        <div class="airdrop-item" @click="$router.push({path:'/Details',query:item})" v-for="(item,index) in ownerList"
+        <div class="airdrop-item"  v-for="(item,index) in ownerList"
              :key="index">
 
           <div class="title">
@@ -94,7 +87,7 @@
                 Token
               </div>
               <div class="value">
-                {{ item.tokenInfo ? item.tokenInfo.name : "" }}
+                {{ item.tokenInfo.name }}
               </div>
             </div>
             <div class="row">
@@ -105,15 +98,8 @@
                 {{ item.distribution }}
               </div>
             </div>
-            <!--            <div class="row">-->
-            <!--              <div class="name">-->
-            <!--                Participants-->
-            <!--              </div>-->
-            <!--              <div class="value">-->
-            <!--                {{ item.userCollect.amount }}-->
-            <!--              </div>-->
-            <!--            </div>-->
-            <div class="mangobox-button">
+
+            <div class="mangobox-button" @click="$router.push({path:'/AirdropDetail',query:item})">
               View Airdrop
             </div>
           </div>
@@ -123,9 +109,8 @@
       </div>
       <div class="airdrop-list" v-if="activeIndex==3">
         <!--v-show ="item&&item.title&&item.title.length>0 " -->
-        <div class="airdrop-item" @click="$router.push({path:'/Details',query:item})" v-for="(item,index) in myList"
+        <div class="airdrop-item"  v-for="(item,index) in myList"
              :key="index">
-
 
           <div class="title">
             {{ item.title }}
@@ -140,7 +125,7 @@
                 Token
               </div>
               <div class="value">
-                {{ item.tokenInfo ? item.tokenInfo.name : "" }}
+                {{ item.tokenInfo.name }}
               </div>
             </div>
             <div class="row">
@@ -151,15 +136,8 @@
                 {{ item.distribution }}
               </div>
             </div>
-<!--            <div class="row">-->
-<!--              <div class="name">-->
-<!--                Participants-->
-<!--              </div>-->
-<!--              <div class="value">-->
-<!--                {{ item.userCollect.amount }}-->
-<!--              </div>-->
-<!--            </div>-->
-            <div class="mangobox-button">
+
+            <div class="mangobox-button" @click="$router.push({path:'/AirdropDetail',query:item})">
               View Airdrop
             </div>
           </div>
@@ -210,7 +188,6 @@ export default {
     async getMyAridrops() {
       try{
         let res = await this.$store.dispatch("mangoAirdrop/getUserAirdrops", this.$store.state.app.account)
-
         let tempList2 = []
         if (res && res.length > 0) {
           for (let i = 0; i < res.length; i++) {
@@ -243,6 +220,9 @@ export default {
             let coin = await this.$store.dispatch("erc20/queryInfo", res[i].token)
             this.distribution += parseInt(distribution.replace(new RegExp(',','g'),''))
             tempList.push({...res[i], tokenInfo: coin, userCollect,distribution})
+            if(res[i].owner.toLowerCase()==this.account.toLowerCase()){
+              this.ownerList.push({...res[i], tokenInfo: coin, userCollect,distribution})
+            }
           }
         }
         tempList.reverse()
@@ -257,7 +237,8 @@ export default {
             let coin = await this.$store.dispatch("erc20/queryInfo", res[i].token)
             this.distribution += parseInt(distribution.replace(new RegExp(',','g'),''))
             tempList2.push({...res[i], tokenInfo: coin, ipfsInfo: (await getIpfs(res[i].information)).data,userCollect,distribution})
-            if(res[i].owner==this.account){
+            if(res[i].owner.toLowerCase()==this.account.toLowerCase()){
+
               this.ownerList.push({...res[i], tokenInfo: coin, ipfsInfo: (await getIpfs(res[i].information)).data,userCollect,distribution})
             }
           }
