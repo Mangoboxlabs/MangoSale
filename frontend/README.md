@@ -41,6 +41,22 @@ npm run docker:build
 docker run -p8080:80 mangosale/ui1:v1
 ```
 
+
+
+### cypress e2e Test
+
+```
+npx cypress open
+```
+
+* Before testing, you need to import the wallet plug-in into the test browser and create an account into gas
+
+  
+
+*  Wallet plugin address: https://github.com/Mangoboxlabs/MangoSale/tree/main/frontend/master-build.zip
+
+
+
 ## Way 2: Local Node Test
 
 ### Config front-end
@@ -60,16 +76,6 @@ it should be `ws://127.0.0.1:9900` by default.
 1. Open https://polkadot.js.org/apps/
 2. Add localhost path(like `ws://127.0.0.1:9900` ) to local node
 3. Use an account(like Alice) to wire money into a `Polkadot JS Extension` wallet
-
-
-
-### cypress e2e Test
-
-```
-npx cypress open
-```
-
-
 
 
 
