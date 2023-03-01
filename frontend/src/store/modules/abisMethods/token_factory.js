@@ -35,6 +35,7 @@ const actions = {
         transfer_limit,
         wallet_limit
     }) {
+
         await judgeContract(rootState.app.web3)
         const injector = await Accounts.accountInjector();
         const AccountId = await Accounts.accountAddress();

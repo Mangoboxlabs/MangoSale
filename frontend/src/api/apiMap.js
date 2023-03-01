@@ -1,18 +1,18 @@
 const abiMap ={
     mangoLock:{
-        address:'5GJ2tM9JsCSkfHhS7gbP4dtzFWnGxb3W6R8bp72AyfnZvMa8',
+        address:'5FmRR5mawVsJM5joznywbwqJKCaUHyQwprNANyVJd5K3zQ6X',
         abi:require("../abi/mango_lock.json")
     },
     tokenFactory : {
-        address:'5GmuLGx64vvavTkxyZRUYjckDQwg7kgmi3wk9TYwGHa5cMML',
+        address:'5D3JqQBskZiT8NPeXy3gKHRHEtNQ5HpvcJ57sxy6X1W1k7HD',
         abi:require("../abi/token_factory.json")
     },
     mangoAirdrop:{
-        address:'5Cc2bQSGoAZ51adtNT6fQLeXyR4dJnThX5psudzxhh4zNTSy',
+        address:'5DNJ1rhJZsBvCurnkp9V31ZX47mk7LnFbyQxA8FzHNZoXyTd',
         abi:require('../abi/mango_airdrop.json')
     },
     Erc20Hash:{
-        address:'0x6b81fcb80496c9c4877c22c4eb907e5fcec2dd6c131cbead1f26ff1682e4641e',
+        address:'0xc0dea8848268dbe173d3b1a387cd78150fce9f21e937c2fd19ddbaf460f39c19',
     },
     token:{
         abi:require("../abi/erc20.json")

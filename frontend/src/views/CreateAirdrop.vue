@@ -51,7 +51,7 @@
         </div>
         <input type="text" v-model="airdropParams.title">
       </div>
-      <div class="time-box">
+      <div class="time-box" style="margin-top: 20px">
         <div class="name">
           Airdrop Start Time(UTC)
         </div>

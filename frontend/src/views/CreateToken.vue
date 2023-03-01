@@ -172,6 +172,7 @@ export default {
       }
       // this.tokenParams.version = parseInt(Math.random() * 300)
       this.tokenParams.version = this.list.length+1
+
       this.tokenParams.owner = this.$store.state.app.account
       if(!this.$store.state.app.account){
         this.$eventBus.$emit('message', {
