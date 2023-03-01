@@ -11,7 +11,7 @@ docker build -t mangosale/ui1:v1 .
 #### RUN
 
 ```
-docker run -p8080:80 mangobox/ui1:v1
+docker run -p8080:80 mangosale/ui1:v1
 ```
 
 
