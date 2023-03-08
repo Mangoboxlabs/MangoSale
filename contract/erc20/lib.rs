@@ -5,6 +5,7 @@ pub use self::erc20::{
     Erc20
 };
 #[allow(unused_imports)]
+#[allow(clippy::comparison_chain)]
 #[ink::contract]
 mod erc20 {
     use alloc::string::String;
@@ -181,7 +182,7 @@ mod erc20 {
 
         #[ink(message)]
         pub fn get_configure(&self) -> (u128,u128,AccountId,u128,u128) {
-            return (self.burn_tax,self.marketing_tax,self.marketing_address, self.transfer_limit,self.wallet_limit);
+            (self.burn_tax,self.marketing_tax,self.marketing_address, self.transfer_limit,self.wallet_limit)
         }
 
         /// Returns the account balance for the specified `owner`.
@@ -231,7 +232,11 @@ mod erc20 {
             });
             Ok(())
         }
-
+        /// Returns the total token supply.
+        #[ink(message)]
+        pub fn total_supply(&self) -> Balance {
+            *self.total_supply
+        }
         /// Transfers `value` tokens on the behalf of `from` to the account `to`.
         ///
         /// This can be used to allow a contract to transfer tokens on ones behalf and/or
@@ -281,10 +286,8 @@ mod erc20 {
             if from_balance < value {
                 return Err(Error::InsufficientBalance)
             }
-            if self.transfer_limit > 0 {
-                if value > self.transfer_limit {
-                    return Err(Error::TransferRestrictions)
-                }
+            if self.transfer_limit > 0 && value > self.transfer_limit{
+                return Err(Error::TransferRestrictions)
             }
             if self.burn_tax > 0 {
                 let burn_value = value * self.burn_tax / 10000; value-=burn_value;
@@ -301,16 +304,14 @@ mod erc20 {
 
             self.balances.insert(from, from_balance - value);
             let to_balance = self.balance_of(to);
-            if self.wallet_limit > 0 {
-                if (to_balance + value) > self.wallet_limit {
-                    return Err(Error::WalletRestrictions);
-                }
+            if self.wallet_limit > 0 && (to_balance + value) > self.wallet_limit {
+               return Err(Error::WalletRestrictions);
             }
             self.balances.insert(to, to_balance + value);
 
             self.move_delegates(
-                self.delegates.get(&from).unwrap_or(&AccountId::default()).clone() ,
-                self.delegates.get(&to).unwrap_or(&AccountId::default()).clone(),
+                *self.delegates.get(&from).unwrap_or(&AccountId::default()) ,
+                *self.delegates.get(&to).unwrap_or(&AccountId::default()),
                 value
             );
 
@@ -344,14 +345,14 @@ mod erc20 {
         #[ink(message)]
         pub fn get_current_votes(&self,user:AccountId) -> u128 {
             let default_checkpoint = Checkpoint{from_block:0, votes:0};
-            let n_checkpoints = self.num_check_points.get(&user).unwrap_or(&0).clone();
+            let n_checkpoints = *self.num_check_points.get(&user).unwrap_or(&0);
             return if n_checkpoints > 0 {  let check_point:Checkpoint = self.check_points.get(&(user,n_checkpoints - 1)).unwrap_or(&default_checkpoint).clone();check_point.votes}  else { 0 } ;
         }
         #[ink(message)]
         pub fn get_prior_votes(&self,account:AccountId,block_number:u32) -> u128 {
             assert!(block_number <  self.env().block_number());
             let default_checkpoint = Checkpoint{from_block:0, votes:0};
-            let n_checkpoints = self.num_check_points.get(&account).unwrap_or(&0).clone();
+            let n_checkpoints = *self.num_check_points.get(&account).unwrap_or(&0);
             if n_checkpoints == 0 {
                 return 0;
             }
@@ -378,12 +379,12 @@ mod erc20 {
                 }
             }
             let outer_cp:Checkpoint = self.check_points.get(&(account,lower)).unwrap_or(&default_checkpoint).clone();
-            return outer_cp.votes;
+            outer_cp.votes
         }
         #[ink(message)]
         pub fn delegate(&mut self,delegatee:AccountId) -> bool {
             let delegator = self.env().caller();
-            let current_delegate =  self.delegates.get(&delegator).unwrap_or(&AccountId::default()).clone();
+            let current_delegate =  *self.delegates.get(&delegator).unwrap_or(&AccountId::default());
             let delegator_balance = self.balance_of(delegator);
             self.delegates.insert(delegator,delegatee);
             Self::env().emit_event(DelegateChanged {
@@ -403,7 +404,7 @@ mod erc20 {
             let default_checkpoint = Checkpoint{from_block:0, votes:0};
             if src_rep != dst_rep && amount > 0 {
                 if src_rep != AccountId::default() {
-                    let src_rep_num =  self.num_check_points.get(&src_rep).unwrap_or(&0).clone();
+                    let src_rep_num =  *self.num_check_points.get(&src_rep).unwrap_or(&0);
                     let check_point:Checkpoint = self.check_points.get(&(src_rep,src_rep_num - 1)).unwrap_or(&default_checkpoint).clone();
                     let src_rep_old = if src_rep_num > 0 {check_point.votes}  else { 0 } ;
                     let src_rep_new =  src_rep_old - amount;
@@ -497,7 +498,7 @@ mod erc20 {
         #[ink::test]
         fn new_works() {
             // Constructor works.
-            let _erc20 = Erc20::new(100,String::from("test"),String::from("test"),8,AccountId::from([0x01; 32]),AccountId::from([0x01; 32]),AccountId::from([0x01; 32]));
+            let _erc20 = Erc20::new(100,String::from("test"),String::from("test"),8,AccountId::from([0x01; 32]));
 
             // Transfer event triggered during initial construction.
             let emitted_events = ink_env::test::recorded_events().collect::<Vec<_>>();
@@ -515,7 +516,7 @@ mod erc20 {
         #[ink::test]
         fn total_supply_works() {
             // Constructor works.
-            let erc20 = Erc20::new(100,String::from("test"),String::from("test"),8,AccountId::from([0x01; 32]),AccountId::from([0x01; 32]),AccountId::from([0x01; 32]));
+            let erc20 = Erc20::new(100,String::from("test"),String::from("test"),8,AccountId::from([0x01; 32]));
             // Transfer event triggered during initial construction.
             let emitted_events = ink_env::test::recorded_events().collect::<Vec<_>>();
             assert_transfer_event(
@@ -532,15 +533,7 @@ mod erc20 {
         #[ink::test]
         fn balance_of_works() {
             // Constructor works
-            let erc20 = Erc20::new(
-                100,
-                String::from("test"),
-                String::from("test"),
-                8,
-                AccountId::from([0x01; 32]),
-                AccountId::from([0x01; 32]),
-                AccountId::from([0x01; 32])
-            );
+            let erc20 = Erc20::new(100,String::from("test"),String::from("test"),8,AccountId::from([0x01; 32]));
             // Transfer event triggered during initial construction
             let emitted_events = ink_env::test::recorded_events().collect::<Vec<_>>();
             assert_transfer_event(
@@ -561,7 +554,7 @@ mod erc20 {
         #[ink::test]
         fn transfer_works() {
             // Constructor works.
-            let mut erc20 = Erc20::new(100,String::from("test"),String::from("test"),8,AccountId::from([0x01; 32]),AccountId::from([0x01; 32]),AccountId::from([0x01; 32]));
+            let mut erc20 = Erc20::new(100,String::from("test"),String::from("test"),8,AccountId::from([0x01; 32]));
             // Transfer event triggered during initial construction.
             let accounts =
                 ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
@@ -594,7 +587,7 @@ mod erc20 {
         #[ink::test]
         fn invalid_transfer_should_fail() {
             // Constructor works.
-            let mut erc20 = Erc20::new(100,String::from("test"),String::from("test"),8,AccountId::from([0x01; 32]),AccountId::from([0x01; 32]),AccountId::from([0x01; 32]));
+            let mut erc20 = Erc20::new(100,String::from("test"),String::from("test"),8,AccountId::from([0x01; 32]));
             let accounts =
                 ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
                     .expect("Cannot get accounts");
@@ -640,7 +633,7 @@ mod erc20 {
         #[ink::test]
         fn transfer_from_works() {
             // Constructor works.
-            let mut erc20 = Erc20::new(100,String::from("test"),String::from("test"),8,AccountId::from([0x01; 32]),AccountId::from([0x01; 32]),AccountId::from([0x01; 32]));
+            let mut erc20 = Erc20::new(100,String::from("test"),String::from("test"),8,AccountId::from([0x01; 32]));
             // Transfer event triggered during initial construction.
             let accounts =
                 ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
@@ -701,7 +694,7 @@ mod erc20 {
 
         #[ink::test]
         fn allowance_must_not_change_on_failed_transfer() {
-            let mut erc20 = Erc20::new(100,String::from("test"),String::from("test"),8,AccountId::from([0x01; 32]),AccountId::from([0x01; 32]),AccountId::from([0x01; 32]));
+            let mut erc20 = Erc20::new(100,String::from("test"),String::from("test"),8,AccountId::from([0x01; 32]));
             let accounts =
                 ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
                     .expect("Cannot get accounts");

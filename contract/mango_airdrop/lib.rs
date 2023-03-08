@@ -57,6 +57,12 @@ mod mango_airdrop {
         id_distribution:StorageHashMap<u128, u128>,
         id_collect:StorageHashMap<u128, u128>
     }
+    impl Default for MangoAirdrop {
+       fn default() -> Self {
+              Self::new()
+       }
+    }
+
 
     impl MangoAirdrop {
         #[ink(constructor)]
@@ -118,12 +124,12 @@ mod mango_airdrop {
             let mut erc20: Erc20 = ink_env::call::FromAccountId::from_account_id(airdrop.token);
             assert!(airdrop.owner == self.env().caller());
             let mut all_amount = 0;
-            for i in 0..information.len()  {
-                let account = information[i].account.clone();
-                all_amount+=information[i].amount.clone();
-                self.user_distribution.insert((id,account),information[i].clone());
+            for i in information  {
+                let account = i.account;
+                all_amount+=i.amount;
+                self.user_distribution.insert((id,account),i.clone());
             }
-            self.id_distribution.insert(id,all_amount.clone());
+            self.id_distribution.insert(id,all_amount);
             let _ret = erc20.transfer_from(self.env().caller(),self.env().account_id(),all_amount);
             true
         }
@@ -134,7 +140,7 @@ mod mango_airdrop {
          */
         #[ink(message)]
         pub fn get_id_distribution(&self, id:u128) -> u128 {
-            self.id_distribution.get(&id).unwrap_or(&0).clone()
+            *self.id_distribution.get(&id).unwrap_or(&0)
         }
         /**
         @notice
@@ -143,7 +149,7 @@ mod mango_airdrop {
          */
         #[ink(message)]
         pub fn get_id_collect(&self, id:u128) -> u128 {
-            self.id_collect.get(&id).unwrap_or(&0).clone()
+            *self.id_collect.get(&id).unwrap_or(&0)
         }
         /**
         @notice
@@ -159,10 +165,10 @@ mod mango_airdrop {
             let mut erc20: Erc20 = ink_env::call::FromAccountId::from_account_id(airdrop.token);
             let mut info =  self.get_user_collect(id);
             assert!(info.amount > 0);
-            assert!(info.is_extract == false);
+            assert!(!info.is_extract);
             let _ret = erc20.transfer(self.env().caller(),info.amount);
-            let mut user_collect = self.id_collect.get(&id).unwrap_or(&0).clone();
-            user_collect+=info.amount.clone();
+            let mut user_collect = *self.id_collect.get(&id).unwrap_or(&0);
+            user_collect+=info.amount;
             info.amount = 0;
             info.is_extract = true;
             self.id_collect.insert(id,user_collect);

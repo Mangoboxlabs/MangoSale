@@ -3,6 +3,7 @@ extern crate alloc;
 use ink_lang as ink;
 #[allow(unused_imports)]
 #[allow(renamed_and_removed_lints)]
+#[allow(clippy::too_many_arguments)]
 #[ink::contract]
 mod token_factory {
     use erc20::Erc20;
@@ -22,7 +23,11 @@ mod token_factory {
     pub struct TokenFactory {
         user_tokens: StorageHashMap<AccountId, Vec<AccountId>>,
     }
-
+    impl Default for TokenFactory {
+        fn default() -> Self {
+            Self::new()
+        }
+    }
     impl TokenFactory {
         #[ink(constructor)]
         pub fn new() -> Self {
@@ -57,7 +62,7 @@ mod token_factory {
             let mut user_tokens = self.user_tokens.get(&owner).unwrap_or(&Vec::new()).clone();
             user_tokens.push(contract_addr);
             self.user_tokens.insert(owner,user_tokens);
-            let mut erc20: Erc20 = ink_env::call::FromAccountId::from_account_id(contract_addr.clone());
+            let mut erc20: Erc20 = ink_env::call::FromAccountId::from_account_id(contract_addr);
             let _ret = erc20.set_configure(burn_tax,marketing_tax,marketing_address,transfer_limit,wallet_limit);
             contract_addr
         }

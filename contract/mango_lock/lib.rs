@@ -41,6 +41,11 @@ mod mango_lock {
         all_locks : Vec<LockDetail>
 
     }
+    impl Default for MangoLock {
+        fn default() -> Self {
+            Self::new()
+        }
+    }
 
     impl MangoLock {
         #[ink(constructor)]
@@ -94,10 +99,10 @@ mod mango_lock {
             amount:u128
         ) ->bool {
             let mut exists_locks = self.user_locks.get(&self.env().caller()).unwrap_or(&Vec::new()).clone();
-            for i in  0..exists_locks.len(){
+            for (i,value) in exists_locks.iter_mut().enumerate(){
                 if i == index.try_into().unwrap() {
-                    let mut erc20: Erc20 = ink_env::call::FromAccountId::from_account_id(exists_locks[i].contract);
-                    exists_locks[i].amount += amount;
+                    let mut erc20: Erc20 = ink_env::call::FromAccountId::from_account_id(value.contract);
+                    value.amount += amount;
                     let _ret = erc20.transfer_from(self.env().caller(),self.env().account_id(),amount);
                 }
             }
@@ -117,9 +122,9 @@ mod mango_lock {
             end_time:u64
         ) ->bool {
             let mut exists_locks = self.user_locks.get(&self.env().caller()).unwrap_or(&Vec::new()).clone();
-            for i in  0..exists_locks.len(){
+            for (i,value) in  exists_locks.iter_mut().enumerate(){
                 if i == index.try_into().unwrap() {
-                    exists_locks[i].end_time = end_time;
+                    value.end_time = end_time;
                 }
             }
             self.user_locks.insert(self.env().caller(),exists_locks);
@@ -136,18 +141,17 @@ mod mango_lock {
             index:u128,
         ) ->bool {
             let mut exists_locks = self.user_locks.get(&self.env().caller()).unwrap_or(&Vec::new()).clone();
-            for i in  0..exists_locks.len(){
+            for (i,value) in  exists_locks.iter_mut().enumerate(){
                 if i == index.try_into().unwrap() {
-                    let mut erc20: Erc20 = ink_env::call::FromAccountId::from_account_id(exists_locks[i].contract);
-                    assert!(exists_locks[i].end_time <= self.env().block_timestamp());
-                    let _ret = erc20.transfer(self.env().caller(),exists_locks[i].amount);
-                    exists_locks[i].is_extract = true;
-                    exists_locks[i].amount = 0;
-
+                    let mut erc20: Erc20 = ink_env::call::FromAccountId::from_account_id(value.contract);
+                    assert!(value.end_time <= self.env().block_timestamp());
+                    let _ret = erc20.transfer(self.env().caller(),value.amount);
+                    value.is_extract = true;
+                    value.amount = 0;
                     return true
                 }
             }
-            return  false
+            false
         }
 
         /**
