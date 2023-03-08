@@ -61,7 +61,7 @@ npx cypress open
 
 ##### 1. In More tools  Open Extentions
 
-![1](D:./img/1.png)
+![1](./img/1.png)
 
 ##### 2.Open Developer mode
 
