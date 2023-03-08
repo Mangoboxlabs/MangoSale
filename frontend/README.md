@@ -55,7 +55,21 @@ npx cypress open
 
 *  Wallet plugin address: https://github.com/Mangoboxlabs/MangoSale/tree/main/frontend/master-build.zip
 
+#### 1) Download the plugin given 
 
+#### 2) Install the polkadot.js in the cypress browser ：
+
+##### 1. In More tools  Open Extentions
+
+![1](D:.\img\1.png)
+
+##### 2.Open Developer mode
+
+![2](.\img\2.jpg)
+
+##### 3.Click Load unpacked to add download  polkadot.js   Extention
+
+![3](.\img\3.jpg)
 
 ## Way 2: Local Node Test
 
