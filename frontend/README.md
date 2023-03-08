@@ -61,15 +61,15 @@ npx cypress open
 
 ##### 1. In More tools  Open Extentions
 
-![1](D:.\img\1.png)
+![1](D:./img/1.png)
 
 ##### 2.Open Developer mode
 
-![2](.\img\2.jpg)
+![2](./img/2.jpg)
 
 ##### 3.Click Load unpacked to add download  polkadot.js   Extention
 
-![3](.\img\3.jpg)
+![3](./img/3.jpg)
 
 ## Way 2: Local Node Test
 
