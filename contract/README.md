@@ -68,9 +68,18 @@ cargo +nightly test
 ### Test by polkadot.js apps
 visit [polkadot.js apps](https://polkadot.js.org/apps/), and connect Mangobox node(wss://rpc.mangobox.xyz/).
 then `Develpoer`->`Contract`->`upload & deploy`.Then upload your compiled `.contract` file.
+#### Use Local Node
+```
+wget https://github.com/paritytech/substrate-contracts-node/releases/download/v0.20.0/substrate-contracts-node-linux.tar.gz
+tar -zxvf substrate-contracts-node-linux.tar.gz
+mv artifacts/substrate-contracts-node-linux/substrate-contracts-node ./
+./substrate-contracts-node
+```
+visit [polkadot.js apps](https://polkadot.js.org/apps/), and connect local node(ws://127.0.0.1:9944).
 
 #### Contract deployment steps
-erc20 > token_factory > mango_lock > mango_airdrop
+token_factory > mango_lock > mango_airdrop
+
 ## Building
 
 To build the WASM of your contract and metadata, You can enter any folder and enter the following command.
