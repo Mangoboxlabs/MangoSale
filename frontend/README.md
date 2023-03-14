@@ -57,7 +57,11 @@ npx cypress open
 
 #### 1) Download the plugin given 
 
-#### 2) Install the polkadot.js in the cypress browser ：
+#### 2) Open e2e Test Page
+
+![3](./img/4.jpg)
+
+#### 3) Install the polkadot.js in the cypress browser ：
 
 ##### 1. In More tools  Open Extentions
 
@@ -70,6 +74,16 @@ npx cypress open
 ##### 3.Click Load unpacked to add download  polkadot.js   Extention
 
 ![3](./img/3.jpg)
+
+
+
+#### 4)  Start testing 
+
+#####  Test sequence :  
+
+createToken => createLock => createAirdrop => distrubutionAndClaim
+
+![3](./img/6.jpg)
 
 ## Way 2: Local Node Test
 
