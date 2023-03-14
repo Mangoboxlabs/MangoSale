@@ -99,6 +99,8 @@ it should be `ws://127.0.0.1:9900` by default.
 
 `src/utils/ipfsApi.js`  `pinataConfig`
 
+get APIKey、APISecret and JWT from https://app.pinata.cloud/
+
 ### gas
 
 1. Open https://polkadot.js.org/apps/
