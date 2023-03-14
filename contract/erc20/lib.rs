@@ -343,45 +343,6 @@ mod erc20 {
         // }
 
         #[ink(message)]
-        pub fn get_current_votes(&self,user:AccountId) -> u128 {
-            let default_checkpoint = Checkpoint{from_block:0, votes:0};
-            let n_checkpoints = *self.num_check_points.get(&user).unwrap_or(&0);
-            return if n_checkpoints > 0 {  let check_point:Checkpoint = self.check_points.get(&(user,n_checkpoints - 1)).unwrap_or(&default_checkpoint).clone();check_point.votes}  else { 0 } ;
-        }
-        #[ink(message)]
-        pub fn get_prior_votes(&self,account:AccountId,block_number:u32) -> u128 {
-            assert!(block_number <  self.env().block_number());
-            let default_checkpoint = Checkpoint{from_block:0, votes:0};
-            let n_checkpoints = *self.num_check_points.get(&account).unwrap_or(&0);
-            if n_checkpoints == 0 {
-                return 0;
-            }
-            let check_point:Checkpoint = self.check_points.get(&(account,n_checkpoints - 1)).unwrap_or(&default_checkpoint).clone();
-            if check_point.from_block <= block_number {
-                return check_point.votes;
-            }
-            // Next check implicit zero balance
-            let check_point_zero:Checkpoint = self.check_points.get(&(account,0)).unwrap_or(&default_checkpoint).clone();
-            if check_point_zero.from_block > block_number {
-                return 0;
-            }
-            let mut lower:u32 = 0;
-            let mut upper:u32 = n_checkpoints - 1;
-            while upper > lower {
-                let center:u32 = upper - (upper - lower) / 2; // ceil, avoiding overflow
-                let  cp:Checkpoint = self.check_points.get(&(account,center)).unwrap_or(&default_checkpoint).clone();
-                if cp.from_block == block_number {
-                    return cp.votes;
-                } else if cp.from_block < block_number {
-                    lower = center;
-                } else {
-                    upper = center - 1;
-                }
-            }
-            let outer_cp:Checkpoint = self.check_points.get(&(account,lower)).unwrap_or(&default_checkpoint).clone();
-            outer_cp.votes
-        }
-        #[ink(message)]
         pub fn delegate(&mut self,delegatee:AccountId) -> bool {
             let delegator = self.env().caller();
             let current_delegate =  *self.delegates.get(&delegator).unwrap_or(&AccountId::default());
