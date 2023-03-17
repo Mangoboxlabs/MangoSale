@@ -60,7 +60,7 @@ describe('example to-do app', () => {
       cy.wait(1000)
       cy.get('.CreateToken .mangobox-button').click()
     }).then(()=>{
-      cy.wait(3000)
+      cy.wait(13000)
 
       cy.url().then(actualUrl => {
         const actualWithoutHash = actualUrl.split('#')[1]
