@@ -86,4 +86,7 @@ To build the WASM of your contract and metadata, You can enter any folder and en
 ```bash
 cargo +nightly contract build
 ```
-
+If you show up ``CodeRejected: Can't decode wasm code``,That's because the rust version is incompatible with the current ink version,Please  enter the following command.
+```
+cargo +nightly contract build --optimization-passes=0
+```
