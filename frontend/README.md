@@ -92,9 +92,9 @@ createToken => createLock => createAirdrop => distrubutionAndClaim
 Please find the correct address for `src/api/apiMap.js`, and update the correct address in `src/api/apiMap.js`. And replace `src/api/httpConfig.js connectPath` to your connect path.
 
 it should be `ws://127.0.0.1:9900` by default.
-
-
-
+#### Copy ABI
+When the contract content changes, it is necessary to copy the contract abi to ``src/abi``.
+The contract ABI is under the contract directory``target/ink/metadata.json``
 #### Ipfs Config
 
 `src/utils/ipfsApi.js`  `pinataConfig`
