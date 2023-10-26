@@ -6,8 +6,6 @@
 docker build -t mangosale/ui1:v1 .
 ```
 
-
-
 #### RUN
 
 ```
