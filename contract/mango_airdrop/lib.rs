@@ -255,4 +255,5 @@ mod mango_airdrop {
             assert!(mp.get_all_airdrops().len() == 0);
         }
     }
+    
 }
