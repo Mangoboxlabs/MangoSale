@@ -1,12 +1,12 @@
-## Mangosale Docker
+# Mangosale Docker
 
-#### Build
+### Build
 
 ```js
 docker build -t mangosale/ui1:v1 .
 ```
 
-#### RUN
+### RUN
 
 ```
 docker run -p8080:80 mangosale/ui1:v1
@@ -14,7 +14,7 @@ docker run -p8080:80 mangosale/ui1:v1
 
 
 
-#### Check
+### Check
 
 ```
 http://localhost:8080/
@@ -22,9 +22,9 @@ http://localhost:8080/
 
 
 
-### config
+## config
 
-###### Dockerfile
+##### Dockerfile
 
 ```
 FROM nginx:1.15.2-alpine
