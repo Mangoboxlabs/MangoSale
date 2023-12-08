@@ -1,6 +1,6 @@
-# Setup mangosale Front-end
+## Setup mangosale Front-end
 
-## Install `Polkadot JS Extension`
+### Install `Polkadot JS Extension`
 
 Please install `Polkadot JS Extension` before you start. You can get it from here https://polkadot.js.org/extension/
 
