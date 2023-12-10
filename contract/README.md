@@ -1,4 +1,5 @@
-# MangoSale
+## MangoSale
+
 ## Contract introduction
 - TokenFactory: TokenFactory can create ERC20 tokens with tax functions.
 - MangoLock:MangoLock can realize the lock-up and linear release of Token.
