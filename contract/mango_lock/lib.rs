@@ -163,5 +163,36 @@ mod mango_lock {
             self.user_locks.get(&self.env().caller()).unwrap_or(&Vec::new()).clone()
         }
     }
-    
+    #[cfg(test)]
+    mod tests {
+        /// Imports all the definitions from the outer scope so we can use them here.
+        use super::*;
+        /// Imports `ink_lang` so we can use `#[ink::test]`.
+        use ink_lang as ink;
+        #[ink::test]
+        fn lock_works() {
+            let mut mp = MangoLock::new();
+            assert!(mp.lock(AccountId::default(),1,1) == false);
+        }
+        #[ink::test]
+        fn additional_tokens_works() {
+            let mut mp = MangoLock::new();
+            assert!(mp.additional_tokens(0,1) == true);
+        }
+        #[ink::test]
+        fn additional_time_works() {
+            let mut mp = MangoLock::new();
+            assert!(mp.additional_time(0,1) == true);
+        }
+        #[ink::test]
+        fn withdraw_token_works() {
+            let mut mp = MangoLock::new();
+            assert!(mp.withdraw_token(0) == false);
+        }
+        #[ink::test]
+        fn get_user_locks_works() {
+            let  mp = MangoLock::new();
+            assert!(mp.get_user_locks().len() == 0);
+        }
+    }
 }
